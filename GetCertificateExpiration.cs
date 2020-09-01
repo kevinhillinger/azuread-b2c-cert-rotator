@@ -55,7 +55,7 @@ namespace AzureAdB2c.Utility
 
                 response.Value = expiration;
                 response.HoursToExpiration = (int)expiration.Subtract(DateTimeOffset.UtcNow).TotalHours;
-                response.Expired = response.HoursToExpiration > HoursBeforeCertificateConsideredExpired;
+                response.Expired = response.HoursToExpiration < HoursBeforeCertificateConsideredExpired;
             }
             else
             {
