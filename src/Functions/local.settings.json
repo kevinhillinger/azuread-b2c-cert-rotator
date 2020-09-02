@@ -2,6 +2,9 @@
     "IsEncrypted": false,
     "Values": {
         "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-        "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "B2C_CLIENT_ID": "<client id, e.g. 845cea86-4a21-406a-b5ef-7abb75b8b5f9>",
+        "B2C_CLIENT_SECRET": "<client secret>",
+        "B2C_TENANT_ID": "<the b2c domain, e.g. mydomain.onmicrosoft.com>"
     }
 }

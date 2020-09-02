@@ -1,4 +1,8 @@
 {
+    "resourceGroup": {
+        "name": "azureadb2c-monitoring",
+        "location": "westus2"
+    },
     "functionApp": {
         "appSettings": [
             {

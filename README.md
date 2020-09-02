@@ -11,24 +11,51 @@ Yet another C# example.
 
 Using Azure Functions, you'll retrieve an Azure AD B2C policy certificate's expiration date using the [Microsoft Graph SDK (beta)](https://docs.microsoft.com/en-us/graph/sdks/use-beta?context=graph%2Fapi%2F1.0&tabs=CS), fetching the [KeySet information](https://docs.microsoft.com/en-us/graph/api/trustframeworkkeyset-get?view=graph-rest-beta&tabs=http).
 
-## Responding automatically
+### Responding (the scheduled caller)
 
-1.  You can use it as a webhook to get the result. Change it to a GET request
-2. The FunctionApp can be changed to a scheduled trigger, log to Application Insights, then setup a log alert based on the JSON that it logs
+You can use it as a webhook to get the result. Change it to a GET request. In this example, I setup a Logic App that will:
 
-# Prove it to me!
+1. Store an array of policy key ids in a Logic App variable (set it to what you want or you could retrieve this list dynamically)
+2. Execute the Function, get the result, and take conditional action
+3. In this example, I triggered sending an SMS to be sent
 
-Follow these steps to get this setup and running.
+You can trigger anything if you don't want a simple SMS or email to be sent. You can even cause another process to be triggered to rotate the key value in B2C.
 
-```bash
-# deploy 
-func azure functionapp publish b2cutil-functionapp-8
-```
+
+# Getting Started
+
+## BC2 configuration
 
 1.  Create an [app registration in the B2C tenant](https://docs.microsoft.com/en-us/graph/auth-v2-service)
 2. Give it **Application Permission** of [TrustFrameworkKeySet.Read.All](https://docs.microsoft.com/en-us/graph/api/trustframeworkkeyset-get?view=graph-rest-beta&tabs=http)
-3. Set the values in the FunctionApp's application settings via the CLI or portal
-4. Call the HTTP function with a POST request and get the result. 
+
+You'll need the following "parameters" from the app registration:
+
+-   Client ID of the app
+-   Client secret
+-   the tenant ID of the B2C tenant (format: mydomain.onmicrosoft.com)
+
+## Deploy resources
+
+Follow these steps to get this setup and running. First, open cloud shell in Bash.
+
+```bash
+git clone --depth 1 https://github.com/kevinhillinger/check-b2c-cert-expiration.git 
+cd check-b2c-cert-expiration
+
+./scripts/deploy.sh
+```
+
+### Resources that get deployed
+
+In ```./scripts/deploy.sh```, the following gets deployed:
+
+-   Resource Group
+-   Function App (on demand, linux)
+    -   Storage account for the function instance
+    -   Application Insights instance for logging
+    -   values in the FunctionApp's application settings should get set
+-   Logic App
 
 ## Running the serverless function locally
 
@@ -42,9 +69,16 @@ func start --build
 **App Settings:**
 
 ```
-"B2C_CLIENT_ID":              "<client id, e.g. 845cea86-4a21-406a-b5ef-7abb75b8b5f9>"
-"B2C_CLIENT_SECRET":    "<client secret>"
-"B2C_TENANT_ID":            "<the b2c domain, e.g. mydomain.onmicrosoft.com>"
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "B2C_CLIENT_ID": "<client id, e.g. 845cea86-4a21-406a-b5ef-7abb75b8b5f9>",
+        "B2C_CLIENT_SECRET": "<client secret>",
+        "B2C_TENANT_ID": "<the b2c domain, e.g. mydomain.onmicrosoft.com>"
+    }
+}
 ```
 
 

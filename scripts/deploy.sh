@@ -1,4 +1,7 @@
 #!/bin/bash
+
+config=$(cat scripts/deploy.json | jq .)
+
 suffix=8
 resource_group=azureadb2c-management
 location=westus2
