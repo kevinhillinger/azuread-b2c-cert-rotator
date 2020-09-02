@@ -1,0 +1,136 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "For_each_id_in_PolicyKeyIds": {
+                "actions": {
+                    "GetCertificateExpiration": {
+                        "inputs": {
+                            "body": {
+                                "policyKeyId": "@{items('For_each_id_in_PolicyKeyIds')}"
+                            },
+                            "function": {
+                                "id": "/subscriptions/$(subscriptionId)/resourceGroups/azureadb2c-management/providers/Microsoft.Web/sites/b2cutil-functionapp-8/functions/GetCertificateExpiration"
+                            },
+                            "method": "POST"
+                        },
+                        "runAfter": {},
+                        "type": "Function"
+                    },
+                    "Parse_JSON": {
+                        "inputs": {
+                            "content": "@body('GetCertificateExpiration')",
+                            "schema": {
+                                "properties": {
+                                    "expired": {
+                                        "type": "boolean"
+                                    },
+                                    "hoursToExpiration": {
+                                        "type": "integer"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "runAfter": {
+                            "GetCertificateExpiration": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "ParseJson"
+                    },
+                    "if_(expired)": {
+                        "actions": {
+                            "Send_Text_Message_(SMS)": {
+                                "inputs": {
+                                    "body": {
+                                        "body": "The Azure AD B2C certificate @{items('For_each_id_in_PolicyKeyIds')} will expire in @{body('Parse_JSON')?['hoursToExpiration']} hours. Please act now.",
+                                        "from": "$(smsFrom)",
+                                        "to": "$(smsTo)"
+                                    },
+                                    "host": {
+                                        "connection": {
+                                            "name": "@parameters('$connections')['twilio']['connectionId']"
+                                        }
+                                    },
+                                    "method": "post",
+                                    "path": "/Messages.json"
+                                },
+                                "runAfter": {},
+                                "type": "ApiConnection"
+                            }
+                        },
+                        "expression": {
+                            "and": [
+                                {
+                                    "equals": [
+                                        "@body('Parse_JSON')?['expired']",
+                                        true
+                                    ]
+                                }
+                            ]
+                        },
+                        "runAfter": {
+                            "Parse_JSON": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "If"
+                    }
+                },
+                "foreach": "@variables('policyKeyIds')",
+                "runAfter": {
+                    "PolicyKeyIds": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Foreach"
+            },
+            "PolicyKeyIds": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "policyKeyIds",
+                            "type": "array",
+                            "value": "@createArray($(policyKeyIds))"
+                        }
+                    ]
+                },
+                "runAfter": {},
+                "type": "InitializeVariable"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "Recurrence": {
+                "recurrence": {
+                    "frequency": "Hour",
+                    "interval": $(intervalToCheckInHours),
+                    "timeZone": "Eastern Standard Time"
+                },
+                "type": "recurrence"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "twilio": {
+                    "connectionId": "/subscriptions/$(subscriptionId)/resourceGroups/b2cmanagement/providers/Microsoft.Web/connections/twilio",
+                    "connectionName": "twilio",
+                    "id": "/subscriptions/$(subscriptionId)/providers/Microsoft.Web/locations/westus2/managedApis/twilio"
+                }
+            }
+        }
+    }
+}

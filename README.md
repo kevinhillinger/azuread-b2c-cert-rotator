@@ -20,6 +20,11 @@ Using Azure Functions, you'll retrieve an Azure AD B2C policy certificate's expi
 
 Follow these steps to get this setup and running.
 
+```bash
+# deploy 
+func azure functionapp publish b2cutil-functionapp-8
+```
+
 1.  Create an [app registration in the B2C tenant](https://docs.microsoft.com/en-us/graph/auth-v2-service)
 2. Give it **Application Permission** of [TrustFrameworkKeySet.Read.All](https://docs.microsoft.com/en-us/graph/api/trustframeworkkeyset-get?view=graph-rest-beta&tabs=http)
 3. Set the values in the FunctionApp's application settings via the CLI or portal
@@ -42,10 +47,17 @@ func start --build
 "B2C_TENANT_ID":            "<the b2c domain, e.g. mydomain.onmicrosoft.com>"
 ```
 
-## Responding to the result
 
-1.  You can use it as a webhook to get the result. Change it to a GET request
-2. The FunctionApp can be changed to a scheduled trigger, log to Application Insights, then setup a log alert based on the JSON that it logs
+## Logic App - Scheduled check of a list of certificates 
+
+![logic app flow](./img/logicapp-flow.png)
+
+Using a logic app found in ```src/Logic```, you can deploy this definition as an example of how to schedule the work to check a list of certificates.
+
+
+**Example SMS message**
+![sms](./img/sms-example.png | width=100)
+
 
 ## Sample POST to the Azure Function
 

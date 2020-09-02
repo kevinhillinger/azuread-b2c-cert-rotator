@@ -1,0 +1,27 @@
+{
+    "functionApp": {
+        "appSettings": [
+            {
+                "name": "B2C_CLIENT_ID",
+                "value": ""
+            },
+            {
+                "name": "B2C_CLIENT_SECRET",
+                "value": ""
+            },
+            {
+                "name": "B2C_TENANT_ID",
+                "value": ""
+            }
+        ]
+    },
+    "logicApp": {
+        "intervalToCheckInHours": 12,
+        "sms": {
+            "from": "<twilio phone number>",
+            "to": "(555) 555-5555",
+        "policyKeyIds": [
+            "policyKeyId1"
+        ]
+    }
+}
