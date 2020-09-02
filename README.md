@@ -56,7 +56,7 @@ Using a logic app found in ```src/Logic```, you can deploy this definition as an
 
 
 **Example SMS message**
-![sms](./img/sms-example.png | width=100)
+![sms](./img/sms-example.png =100x)
 
 
 ## Sample POST to the Azure Function
