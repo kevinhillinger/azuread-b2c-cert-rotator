@@ -2,6 +2,8 @@
 
 Azure AD B2C allows for custom policies to have certificates uploaded to what's called a "KeySet". However, other than manually confirming the certificates expiration date, there's really no easily apparent way to automate this.
 
+I didn't really want to do this in C#, but that's what the doctor ordered :)
+
 ## Solution overview
 
 Using Azure Functions, you'll retreive an Azure AD B2C policy certificate's expiration date using the [Microsoft Graph SDK (beta)](https://docs.microsoft.com/en-us/graph/sdks/use-beta?context=graph%2Fapi%2F1.0&tabs=CS), fetching the [KeySet information](https://docs.microsoft.com/en-us/graph/api/trustframeworkkeyset-get?view=graph-rest-beta&tabs=http).
@@ -19,6 +21,15 @@ Follow these steps to get this setup and running.
 2. Give it **Application Permission** of [TrustFrameworkKeySet.Read.All](https://docs.microsoft.com/en-us/graph/api/trustframeworkkeyset-get?view=graph-rest-beta&tabs=http)
 3. Set the values in the FunctionApp's application settings via the CLI or portal
 4. Call the HTTP function with a POST request and get the result. 
+
+## Running the serverless function locally
+
+[Install the Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=linux%2Ccsharp%2Cbash#install-the-azure-functions-core-tools)
+
+```
+cd src/Functions
+func start --build
+```
 
 **App Settings:**
 
