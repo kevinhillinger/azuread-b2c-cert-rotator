@@ -1,7 +1,19 @@
-# check-b2c-cert-expiration
-Using Azure Functions, check if an Azure AD B2C policy certificate's expiration date
+# Azure AD B2C - How To Check Certificate Expiration
 
-## Setup
+Azure AD B2C allows for custom policies to have certificates uploaded to what's called a "KeySet". However, other than manually confirming the certificates expiration date, there's really no easily apparent way to automate this.
+
+## Solution overview
+
+Using Azure Functions, you'll retreive an Azure AD B2C policy certificate's expiration date using the [Microsoft Graph SDK (beta)](https://docs.microsoft.com/en-us/graph/sdks/use-beta?context=graph%2Fapi%2F1.0&tabs=CS), fetching the [KeySet information](https://docs.microsoft.com/en-us/graph/api/trustframeworkkeyset-get?view=graph-rest-beta&tabs=http).
+
+## Responding automatically
+
+1.  You can use it as a webhook to get the result. Change it to a GET request
+2. The FunctionApp can be changed to a scheduled trigger, log to Application Insights, then setup a log alert based on the JSON that it logs
+
+# Prove it to me!
+
+Follow these steps to get this setup and running.
 
 1.  Create an [app registration in the B2C tenant](https://docs.microsoft.com/en-us/graph/auth-v2-service)
 2. Give it **Application Permission** of [TrustFrameworkKeySet.Read.All](https://docs.microsoft.com/en-us/graph/api/trustframeworkkeyset-get?view=graph-rest-beta&tabs=http)
