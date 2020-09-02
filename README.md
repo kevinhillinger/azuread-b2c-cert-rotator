@@ -13,7 +13,7 @@ Using Azure Functions, you'll retrieve an Azure AD B2C policy certificate's expi
 
 ### Responding (the scheduled caller)
 
-You can use it as a webhook to get the result. Change it to a GET request. In this example, I setup a Logic App that will:
+In this example, I setup a scheduled Logic App that will execute on an interval:
 
 1. Store an array of policy key ids in a Logic App variable (set it to what you want or you could retrieve this list dynamically)
 2. Execute the Function, get the result, and take conditional action
