@@ -54,9 +54,11 @@ func start --build
 
 Using a logic app found in ```src/Logic```, you can deploy this definition as an example of how to schedule the work to check a list of certificates.
 
+There are placeholder values you'll need to update in the logic app definition before deploying.
 
-**Example SMS message**
-<img src="./img/sms-example.png" width="100" />
+### Example SMS message
+
+<img src="./img/sms-example.png" width="250" />
 
 ## Sample POST to the Azure Function
 
