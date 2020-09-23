@@ -40,8 +40,8 @@ You'll need the following "parameters" from the app registration:
 Follow these steps to get this setup and running. First, open cloud shell in Bash.
 
 ```bash
-git clone --depth 1 https://github.com/kevinhillinger/check-b2c-cert-expiration.git 
-cd check-b2c-cert-expiration
+git clone --depth 1 https://github.com/kevinhillinger/azuread-b2c-cert-rotator.git 
+cd azuread-b2c-cert-rotator
 
 ./scripts/deploy.sh
 ```
